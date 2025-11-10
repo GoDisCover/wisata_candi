@@ -3,6 +3,7 @@ import 'package:wisata_candi/data/candi_data.dart';
 import 'package:wisata_candi/screens/detail_screen.dart';
 import 'package:wisata_candi/screens/profile_screen.dart';
 import 'data/candi_data.dart';
+import 'widgets/profile_info_item.dart';
 void main() {
   runApp(const MainApp());
 }

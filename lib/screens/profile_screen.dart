@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wisata_candi/widgets/profile_info_item.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -9,16 +10,31 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isSignedIn = false;
-  String fullName = '';
-  String username = '';
-  int favoriteCandiCount = 0;
+  String fullName = 'Jessen Cornelius';
+  String username = 'jessen';
+  int favoriteCandiCount = 10;
+
+  void signIn() {
+    setState(() {
+      isSignedIn = !isSignedIn;
+    });
+  }
+
+  void signOut() {
+    setState(() {
+      isSignedIn = !isSignedIn;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           Container(
-            height: 200, width: double.infinity, color: Colors.deepPurple,
+            height: 200,
+            width: double.infinity,
+            color: Colors.deepPurple,
           ),
           Align(
             alignment: Alignment.topCenter,
@@ -31,86 +47,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     alignment: Alignment.bottomRight,
                     children: [
                       Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.deepPurple,width: 1),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.deepPurple,
+                            width: 1,
+                          ),
                           shape: BoxShape.circle,
                         ),
-                                              child: CircleAvatar(
+                        child: CircleAvatar(
                           radius: 50,
-                          backgroundImage: AssetImage('images/placeholder_image.png'),
+                          backgroundImage: AssetImage(
+                            'images/placeholder_image.png',
+                          ),
                         ),
                       ),
                       if (isSignedIn)
-                        IconButton(onPressed: (){}, icon: Icon(Icons.camera_alt, color: Colors.deepPurple[50],))
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: Colors.deepPurple[50],
+                          ),
+                        ),
                     ],
                   ),
                   // TODO : profile info
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20),
                   Divider(color: Colors.deepPurple[100]),
-                  SizedBox(height: 4,),
-                  Row(
-                    children: [
-                      SizedBox(width:MediaQuery.of(context).size.width /3,
-                      child: Row(
-                        children: [
-                          Icon(Icons.lock, color: Colors.amber,),
-                          SizedBox(width: 8,),
-                          Text("Pengguna",style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,
-                          ),)
-                        ],
-                      ),),
-                      Expanded(child: Text(': ${username}',style: TextStyle(fontSize: 18),)),
-                      if(isSignedIn) Icon(Icons.edit),
-                    ],
+                  SizedBox(height: 4),
+                  ProfileInfoItem(
+                    icon: Icons.lock,
+                    label: 'Pengguna',
+                    value: username,
+                    iconColor: Colors.amber,
                   ),
-                  SizedBox(height: 4,),
+                  SizedBox(height: 4),
                   Divider(color: Colors.deepPurple[100]),
-                  SizedBox(height: 4,),
-                  Row(
-                    children: [
-                      SizedBox(width:MediaQuery.of(context).size.width /3,
-                      child: Row(
-                        children: [
-                          Icon(Icons.person, color: Colors.lightBlueAccent,),
-                          SizedBox(width: 8,),
-                          Text("Nama",style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,
-                          ),)
-                        ],
-                      ),),
-                      Expanded(child: Text(': ${fullName}',style: TextStyle(fontSize: 18),)),
-                      if(isSignedIn) Icon(Icons.edit),
-                    ],
+                  SizedBox(height: 4),
+                  ProfileInfoItem(
+                    icon: Icons.person,
+                    label: 'Nama',
+                    value: fullName,
+                    iconColor: Colors.blue,
+                    showEditIcon: isSignedIn,
+                    onEditPressed: (){
+                      debugPrint('Icon Edit Ditekan...');
+                    },
                   ),
-                  SizedBox(height: 4,),
+                  SizedBox(height: 4),
                   Divider(color: Colors.deepPurple[100]),
-                  SizedBox(height: 4,),
-                  Row(
-                    children: [
-                      SizedBox(width:MediaQuery.of(context).size.width /3,
-                      child: Row(
-                        children: [
-                          Icon(Icons.favorite, color: Colors.red,),
-                          SizedBox(width: 8,),
-                          Text("Favorite",style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,
-                          ),)
-                        ],
-                      ),),
-                      Expanded(child: Text(': ${favoriteCandiCount}',style: TextStyle(fontSize: 18),)),
-                      if(isSignedIn) Icon(Icons.edit),
-                      ],
+                  SizedBox(height: 4),
+                  ProfileInfoItem(
+                    icon: Icons.favorite,
+                    label: "Favorit",
+                    value: favoriteCandiCount > 0 ? '$favoriteCandiCount' : '',
+                    iconColor: Colors.red,
                   ),
-                  SizedBox(height: 4,),
-                  Divider(color: Colors.deepPurple[100]),
-                  SizedBox(height: 4,),
-                  isSignedIn ? TextButton(data)
                   // todo : membuat profile action
+                  SizedBox(height: 4),
+                  Divider(color: Colors.deepPurple[100]),
+                  SizedBox(height: 4),
+                  isSignedIn
+                      ? TextButton(onPressed: signOut, child: Text("Sign Out"))
+                      : TextButton(onPressed: signIn, child: Text("Sign In")),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
