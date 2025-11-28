@@ -15,8 +15,7 @@ class ItemCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(candi: candi)),
+          MaterialPageRoute(builder: (context) => DetailScreen(candi: candi)),
         );
       },
       child: Card(
@@ -31,13 +30,16 @@ class ItemCard extends StatelessWidget {
             // TODO: 3. Buat Image sebagai anak dari Column
             Expanded(
               // TODO : 7 . Implementasi Hero animation
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.asset(
-                  candi.imageAsset,
-                  width: double.infinity,
-                  height: 120,
-                  fit: BoxFit.cover,
+              child: Hero(
+                tag: candi.imageAsset,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.asset(
+                    candi.imageAsset,
+                    width: double.infinity,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

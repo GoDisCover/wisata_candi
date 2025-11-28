@@ -17,12 +17,15 @@ class DetailScreen extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset(candi.imageAsset,      
-                  width: double.infinity,
-                  height : 300,
-                  fit:  BoxFit.cover,
+                child: Hero(
+                  tag: candi.imageAsset,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.asset(candi.imageAsset,      
+                    width: double.infinity,
+                    height : 300,
+                    fit:  BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -30,7 +33,7 @@ class DetailScreen extends StatelessWidget {
             ),
             child:Container(
                 decoration: BoxDecoration(
-                  color: Colors.deepPurple[100]?.withOpacity(0.8),
+                  color: const Color.fromARGB(255, 247, 247, 248)?.withOpacity(0.8),
                   shape: BoxShape.circle,
                 ),
             child:IconButton(
