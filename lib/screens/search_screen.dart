@@ -11,9 +11,31 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   // TODO 1 : Declarasi Variable yang dibutuhkan
   List<Candi> _filteredCandis = candiList;
-  String _searchQuery = '';
+  String searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
-
+  @override
+  void initState(){
+    super.initState();
+    _searchController.addListener(_filtercandis);
+  }
+  @override
+  void dispose(){
+    _searchController.dispose();
+    super.dispose();
+  }
+  void _filtercandis(){
+    setState(() {
+      searchQuery = _searchController.text.toLowerCase();
+      if (searchQuery.isEmpty){
+        _filteredCandis = candiList;
+      }else{
+        _filteredCandis = candiList.where((candi){
+          return candi.name.toLowerCase().contains(searchQuery) ||
+          candi.location.toLowerCase().contains(searchQuery);
+        }).toList();
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 color: Colors.amber,
               ),
               child: TextField(
+                controller: _searchController,
                 autofocus: false,
                 decoration: InputDecoration(
                   // TODO 6 Implementasi fitur pencarian
@@ -79,7 +102,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              Candi.description,
+                              Candi.name,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

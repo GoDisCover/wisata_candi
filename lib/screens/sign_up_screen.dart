@@ -16,11 +16,60 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final TextEditingController _passwordController = TextEditingController();
 
-  String _errorText = '';
+  String _errorTextFullname = '';
+  String _errorTextUsername = '';
+  String _errorTextPassword = '';
 
   bool _isSignedIn = false;
 
   bool _obscurePassword = true;
+// TODO :  fungsi _signup
+  void _signup(){
+    String fullname = _fullnameController.text.trim();
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+    if(fullname.isEmpty ){
+      setState(() {
+        _errorTextFullname = ('Kolom ini Harus Diisi');
+      });
+    }else{
+      setState(() {
+        _errorTextFullname ='';
+      });
+    }
+    if(username.isEmpty){
+      setState(() {
+        _errorTextUsername = ('Kolom ini Harus Diisi');
+      });
+    }else{
+      setState(() {
+        _errorTextUsername ='';
+      });
+    }
+    if(password.isEmpty){
+      setState(() {
+        _errorTextPassword = ('Kolom ini Harus Diisi');
+      });
+    }else{
+      if(password.length<8|| !password.contains(RegExp(r'[A-z]'))){
+      setState(() {
+        _errorTextPassword = 'Minimal 8 karakter, kombinasi [A-Z], [a-z], [0-9], [!@#\\\$%^&*(),.?":{}|<>]';
+      });}
+      else{
+        setState(() {
+          _errorTextPassword = '';
+        });
+      }
+    }
+    }
+
+  @override
+  void dispose(){
+   _fullnameController.dispose();
+   _usernameController.dispose();
+   _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     labelText: 'Nama Pengguna',
                     border: OutlineInputBorder(),
+                    errorText: _errorTextUsername.isNotEmpty ? _errorTextUsername:null,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -47,6 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     labelText: 'Nama Panjang Pengguna',
                     border: OutlineInputBorder(),
+                    errorText: _errorTextFullname.isNotEmpty ? _errorTextFullname:null,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -55,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: InputDecoration(
                     labelText: 'Password Pengguna',
                     border: OutlineInputBorder(),
-                    errorText: _errorText.isNotEmpty ? _errorText : null,
+                    errorText: _errorTextPassword.isNotEmpty ? _errorTextPassword : null,
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
@@ -73,7 +124,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _signup();
+                  },
                   child: Text(
                     'Sign Up',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
