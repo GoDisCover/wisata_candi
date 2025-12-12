@@ -15,9 +15,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int favoriteCandiCount = 10;
 
   void signIn() {
-    setState(() {
-      isSignedIn = !isSignedIn;
-    });
+    // setState(() {
+    //   isSignedIn = !isSignedIn;
+    // });
+    Navigator.pushNamed(context, '/signin');
   }
 
   void signOut() {

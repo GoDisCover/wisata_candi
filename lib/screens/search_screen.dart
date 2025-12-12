@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wisata_candi/data/candi_data.dart';
+import 'package:wisata_candi/helpers/database_helper.dart';
 import 'package:wisata_candi/models/candi.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -9,33 +10,35 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  // TODO 1 : Declarasi Variable yang dibutuhkan
-  List<Candi> _filteredCandis = candiList;
-  String searchQuery = '';
+  List<Candi> _filteredCandis = [];
+  List<Candi> _allCandis = []; // ✅ UBAH: ambil dari database
+  String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
+  final DatabaseHelper _dbHelper = DatabaseHelper(); // ✅ TAMBAHKAN
+  bool _isLoading = true; // ✅ TAMBAHKAN
   @override
-  void initState(){
-    super.initState();
-    _searchController.addListener(_filtercandis);
-  }
+  // void initState(){
+  //   super.initState();
+  //   _searchController.addListener(_filtercandis);
+  // }
   @override
   void dispose(){
     _searchController.dispose();
     super.dispose();
   }
-  void _filtercandis(){
-    setState(() {
-      searchQuery = _searchController.text.toLowerCase();
-      if (searchQuery.isEmpty){
-        _filteredCandis = candiList;
-      }else{
-        _filteredCandis = candiList.where((candi){
-          return candi.name.toLowerCase().contains(searchQuery) ||
-          candi.location.toLowerCase().contains(searchQuery);
-        }).toList();
-      }
-    });
-  }
+  // void _filtercandis(){
+  //   setState(() {
+  //     searchQuery = _searchController.text.toLowerCase();
+  //     if (searchQuery.isEmpty){
+  //       _filteredCandis = candiList;
+  //     }else{
+  //       _filteredCandis = candiList.where((candi){
+  //         return candi.name.toLowerCase().contains(searchQuery) ||
+  //         candi.location.toLowerCase().contains(searchQuery);
+  //       }).toList();
+  //     }
+  //   });
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

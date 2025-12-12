@@ -9,9 +9,50 @@ import 'package:wisata_candi/screens/sign_in_screen.dart';
 import 'package:wisata_candi/screens/sign_up_screen.dart';
 import 'data/candi_data.dart';
 import 'widgets/profile_info_item.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb; // TAMBAHKAN
+import 'package:wisata_candi/helpers/database_helper.dart'; // TAMBAHKAN
+import 'package:wisata_candi/data/candi_data.dart'; // TAMBAHKAN
 
-void main() {
+
+void main()async { // ✅ TAMBAHKAN async
+  WidgetsFlutterBinding.ensureInitialized(); // ✅ TAMBAHKAN INI
+
+  // ✅ TAMBAHKAN - Inisialisasi database untuk non-web platform
+  if (!kIsWeb) {
+    try {
+      await _initializeDatabase();
+    } catch (e) {
+      print('❌ Error initializing database: $e');
+    }
+  }
+  
+
   runApp(const MainApp());
+}
+Future<void> _initializeDatabase() async {
+  try {
+    final dbHelper = DatabaseHelper();
+    
+    print('Checking database status...');
+    
+    // Check apakah database sudah memiliki data
+    final isEmpty = await dbHelper.isDatabaseEmpty();
+    
+    if (isEmpty) {
+      print('Database empty, migrating data...');
+      
+      // Migrasi data dari static list ke database
+      await dbHelper.insertCandiList(candiList);
+      
+      print('Data candi berhasil dimigrasikan ke database');
+    } else {
+      print('Database sudah memiliki data');
+    }
+  } catch (e) {
+    print('Database initialization error: $e');
+    rethrow;
+  }
 }
 
 class MainApp extends StatelessWidget {
@@ -39,10 +80,9 @@ class MainApp extends StatelessWidget {
       // ),
       // home: ProfileScreen(),
       // home: SignInScreen(),
-      // home: SignUpScreen(),
+      home: SignUpScreen(),
       // home: SearchScreen(),
       // home: MainScreen(),
-      home: SignUpScreen(),
     );
   }
 }
@@ -96,13 +136,33 @@ class _MainScreenState extends State<MainScreen> {
               _curentIndex = index;
             });
           },
-          
+
           selectedItemColor: Colors.deepPurple,
           unselectedItemColor: Colors.deepPurple[100],
           showUnselectedLabels: true,
         ),
       ),
       // TODO 4 : Buat data dan child
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Wisata Candi',
+      theme: ThemeData(),
+      home: MainScreen(),
+      initialRoute: '/',
+      routes: {
+        '/homescreen': (context) => const HomeScreen(),
+        '/signin' : (context) => const SignInScreen(),
+        '/signup' : (context) => const SignUpScreen(),
+      },
     );
   }
 }
