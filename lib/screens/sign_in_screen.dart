@@ -17,7 +17,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   String _errorText = '';
 
-  bool _isSignedIn = false;
+  bool _isSignedIn = true;
 
   bool _obscurePassword = true;
   void _signIn() async {

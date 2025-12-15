@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wisata_candi/widgets/profile_info_item.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -25,6 +28,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       isSignedIn = !isSignedIn;
     });
+  }
+
+  String _imageFile = '';
+  final picker = ImagePicker();
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = pickedFile.path;
+      });
+    }
+  }
+
+  void _showPicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          children: [
+            ListTile(
+              title: Text(
+                'Image Source',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_library_outlined),
+              title: Text('Gallery'),
+              onTap: () {
+                Navigator.of(context).pop(_getImage(ImageSource.gallery));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_library_outlined),
+              title: Text("Camera"),
+              onTap: () {
+                Navigator.of(context).pop(_getImage(ImageSource.camera));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -57,14 +103,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundImage: AssetImage(
-                            'images/placeholder_image.png',
-                          ),
+                          backgroundImage: _imageFile.isNotEmpty
+                              ? FileImage(File(_imageFile))
+                              : null,
+                          child: _imageFile.isEmpty
+                              ? Icon(Icons.person, size: 50)
+                              : null,
                         ),
                       ),
                       if (isSignedIn)
                         IconButton(
-                          onPressed: () {},
+                          onPressed: _showPicker,
                           icon: Icon(
                             Icons.camera_alt,
                             color: Colors.deepPurple[50],
@@ -91,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     value: fullName,
                     iconColor: Colors.blue,
                     showEditIcon: isSignedIn,
-                    onEditPressed: (){
+                    onEditPressed: () {
                       debugPrint('Icon Edit Ditekan...');
                     },
                   ),
